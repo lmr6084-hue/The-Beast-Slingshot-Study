@@ -1,0 +1,41 @@
+
+#include <stdio.h>
+
+int main(void)
+{
+    /* Calibration parameters */
+    const double F_cal = 150.0;           // N
+    const double V_sensor_cal = 7.587e-4; // V
+
+    /* Non-inverting amplifier parameters */
+    const double R1 = 10.0;               // ohms
+    const double R2 = 4000.0;             // ohms
+
+    const double gain = 1.0 + R2 / R1;
+
+    double Vout;
+    double V_sensor;
+    double force;
+
+    printf("=== AMPLIFIER VOLTAGE TO FORCE ===\n");
+    printf("Amplifier gain: %.2f\n", gain);
+    printf("Enter amplifier output voltage (V): ");
+
+    if (scanf("%lf", &Vout) != 1) {
+        printf("Error: Invalid voltage input.\n");
+        return 1;
+    }
+
+    /* Recover sensor voltage from amplified voltage */
+    V_sensor = Vout / gain;
+
+    /* Convert sensor voltage into applied force */
+    force = (V_sensor / V_sensor_cal) * F_cal;
+
+    printf("\n--- Results ---\n");
+    printf("Amplifier output: %.6f V\n", Vout);
+    printf("Sensor voltage:   %.8f V\n", V_sensor);
+    printf("Calculated force: %.4f N\n", force);
+
+    return 0;
+}
